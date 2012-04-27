@@ -1,4 +1,4 @@
-A resque plugin that allows jobs to to determine if they get run.  For example, one can author jobs that are filter-aware so that they can be scheduled with resque-scheduler to run on specific hosts.
+A resque plugin that allows jobs to execute only if a filter is true, re-queueing otherwise. For example, one can author jobs that are filter-aware so that they can be scheduled with resque-scheduler to run on specific hosts.
 
 Authored against Resque 1.20.0, so it at least works with that - try running the tests if you use a different version of resque
 

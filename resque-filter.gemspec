@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Matt Conway"]
   s.email       = ["matt@conwaysplace.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{A resque plugin that allows jobs to execute only if a filter is true, re-queueing otherwise.}
+  s.description = %q{A resque plugin that allows jobs to execute only if a filter is true, re-queueing otherwise. For example, one can author jobs that are filter-aware so that they can be scheduled with resque-scheduler to run on specific hosts.}
 
   s.rubyforge_project = "resque-filter"
 
