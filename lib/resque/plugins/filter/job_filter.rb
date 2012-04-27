@@ -4,10 +4,10 @@ require 'resque/worker'
 # following to an initializer (defaults shown):
 #
 #    Resque::Plugins::Filter::JobFilter.configure do |config|
-#      The queue strategy to use when filtering job:
-#        :simple - pops, checks filter, pushes if not runnable
-#        :optimistic - peeks, checks filter, pops if runnable (not distributed client safe)
-#      config.strategy = :simple # :optimistic
+#      # The queue strategy to use when filtering job:
+#      #   :simple - pops, checks filter, pushes if not runnable
+#      #   :optimistic - peeks, checks filter, pops if runnable (not distributed client safe)
+#      config.strategy = :simple
 #    end
 module Resque
   module Plugins
@@ -19,6 +19,11 @@ module Resque
         class << self
           # optional
           attr_accessor :strategy
+          
+          def strategy=(s)
+            raise "Invalid strategy: #{s}" unless [:simple, :optimistic].include?(s)
+            @strategy = s
+          end
         end
   
         # default values
@@ -29,7 +34,6 @@ module Resque
           yield self
         end
       
-        
         def self.extended(receiver)
            class << receiver
              alias reserve_without_filter reserve
@@ -38,10 +42,7 @@ module Resque
         end
 
         def reserve_with_filter(queue)
-          case JobFilter.strategy
-            when :optimistic then optimistic_reserve_with_filter(queue)
-            else simple_reserve_with_filter(queue)
-          end
+          send("#{JobFilter.strategy}_reserve_with_filter", queue)
         end
         
         def simple_reserve_with_filter(queue)

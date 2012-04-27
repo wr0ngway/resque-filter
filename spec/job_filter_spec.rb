@@ -33,6 +33,13 @@ describe "Resque Job Filter" do
 
   end
 
+  it "should fail for unknown strategy" do
+    lambda {
+      Resque::Plugins::Filter::JobFilter.strategy = :badstrategy
+    }.should raise_error(RuntimeError, "Invalid strategy: badstrategy")
+    Resque::Plugins::Filter::JobFilter.strategy.should == :simple
+  end
+
   [:simple, :optimistic].each do |strategy|
       
     context "basic filtering with #{strategy} strategy" do
@@ -42,10 +49,15 @@ describe "Resque Job Filter" do
       end
       
       after(:each) do
-        Resque::Plugins::Filter::JobFilter.strategy = nil
+        Resque::Plugins::Filter::JobFilter.strategy = :simple
       end
       
       it "runs job when filter is true" do
+        Resque::Job.should_receive("#{strategy}_reserve_with_filter").with(:myqueue)
+        Resque::Job.reserve(:myqueue)
+      end
+      
+      it "calls correct strategy method" do
         Resque::Job.create(:myqueue, FilterJob, true)      
         worker = Resque::Worker.new("*")
   
