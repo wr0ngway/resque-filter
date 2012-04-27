@@ -3,6 +3,7 @@ A resque plugin that allows jobs to to determine if they get run.  For example, 
 Authored against Resque 1.20.0, so it at least works with that - try running the tests if you use a different version of resque
 
 [![Build Status](https://secure.travis-ci.org/wr0ngway/resque-filter.png)](http://travis-ci.org/wr0ngway/resque-filter)
+
 Usage:
 
 Install the gem, then define a worker with a filter method.  If that method returns true, the job will run, otherwise it will get re-enqueued.
